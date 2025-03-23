@@ -1,14 +1,18 @@
 # Medical Insurance Cost Prediction
 
-## Mission
+## Project Overview
 
-This project aims to predict medical insurance costs based on various personal attributes, helping both insurance companies and individuals understand the factors that influence healthcare expenses. By accurately predicting insurance charges, we can assist people in planning their finances and insurance companies in setting appropriate premiums.
+This project predicts medical insurance costs based on personal attributes using machine learning models. The system consists of three main components:
+
+1. A data analysis and model training pipeline
+2. A FastAPI backend deployment for predictions
+3. A Flutter mobile application for user-friendly access
 
 ## Dataset
 
-The dataset used in this project is from Kaggle: [Medical Insurance Cost](https://www.kaggle.com/datasets/mirichoi0218/insurance).
+The dataset used is from Kaggle: [Medical Insurance Cost Prediction](https://www.kaggle.com/datasets/rahulvyasm/medical-insurance-cost-prediction).
 
-It contains the following features:
+Features include:
 
 - Age: Age of the primary beneficiary
 - Sex: Gender of the insurance contractor (female or male)
@@ -20,9 +24,18 @@ It contains the following features:
 
 ## Project Structure
 
-- `summative/linear_regression/multivariate.py`: Main script for model training, comparison, and evaluation
-- `api/predict.py`: Script for making predictions using the trained model
-- `summative/insurance.csv`: The dataset file
+```
+.
+├── api/                  # FastAPI backend
+│   └── predict.py        # API endpoint definitions
+├── flutterapp/           # Flutter mobile application
+├── summative/            # Model training and analysis
+│   └── linear_regression/
+│       ├── multivariate.py        # Model training script
+│       └── multivariate.ipynb     # Jupyter notebook version
+├── requirements.txt      # Python dependencies
+└── README.md
+```
 
 ## Models Implemented
 
@@ -32,15 +45,50 @@ It contains the following features:
 
 The models are compared based on Mean Squared Error (MSE) and R² score, and the best-performing model is saved for future predictions.
 
-## Installation
+## Setup and Installation
 
-To set up and run this project:
+### Backend (Python API)
 
-1. Clone the repository
-2. Install the required dependencies:
+1. Clone the repository:
 
+```bash
+git clone https://github.com/your-username/linear_regression_model.git
+cd linear_regression_model
 ```
+
+2. Create and activate a virtual environment:
+
+```bash
+# For Windows
+python -m venv venv
+venv\Scripts\activate
+
+# For macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3. Install required dependencies:
+
+```bash
 pip install -r requirements.txt
+```
+
+### Flutter App
+
+1. Make sure Flutter is installed on your system: [Flutter Installation Guide](https://docs.flutter.dev/get-started/install)
+
+2. Navigate to the Flutter app directory and get dependencies:
+
+```bash
+cd flutterapp
+flutter pub get
+```
+
+3. Run the app in debug mode:
+
+```bash
+flutter run
 ```
 
 ## Usage
@@ -49,47 +97,57 @@ pip install -r requirements.txt
 
 To train all models and compare their performance:
 
-```
-python mulrivariate.py
-```
-
-This script will:
-
-- Load and preprocess the data
-- Train Linear Regression, Decision Tree, and Random Forest models
-- Compare performance metrics
-- Save all models and the best-performing one
-- Generate visualization plots
-
-### Making Predictions
-
-To make predictions using the best model:
-
-```
-python predict.py <age> <sex> <bmi> <children> <smoker> <region>
+```bash
+python summative/linear_regression/multivariate.py
 ```
 
-Example:
+You can also explore the Colab notebook: [multivariate.ipynb](https://colab.research.google.com/github/reponseashimwe/linear_regression_model/blob/main/summative/linear_regression/multivariate.ipynb)
 
+### Running the API Locally
+
+```bash
+cd api
+uvicorn predict:app --reload
 ```
-python predict.py 35 male 29.5 2 yes northwest
+
+### Public API Endpoint
+
+The API is publicly deployed at: [https://linear-regression-model-2ez7.onrender.com/docs](https://linear-regression-model-2ez7.onrender.com/docs)
+
+You can test predictions using this cURL example:
+
+```bash
+curl -X 'GET' \
+  'https://linear-regression-model-2ez7.onrender.com/predict?age=30&sex=male&bmi=28.5&children=2&smoker=yes&region=northeast' \
+  -H 'accept: application/json'
 ```
 
-If no arguments are provided, the script will use example values.
+## Mobile Application
 
-## Results
+The Flutter application provides a user-friendly interface to:
 
-The training script generates various visualizations:
+- Input personal details
+- Get insurance cost predictions
+- View cost-saving recommendations
 
-- Correlation heatmap of numeric features
-- Distribution of insurance charges
-- Relationship between age/BMI and charges
-- Learning curves for each model
-- Model comparison based on MSE
-- Actual vs. predicted charges for Linear Regression
+### App Features:
 
-The best-performing model is saved and can be used for future predictions.
+- Clean, modern UI with Poppins font
+- Form validation for inputs
+- Results display with annual and monthly costs
+- Recommendations for potential cost savings
+
+## Demo
+
+Watch a video demonstration of the project: [YouTube Demo](https://youtu.be/your-video-id)
+
+## Resources
+
+- GitHub Repository: [linear_regression_model](https://github.com/reponseashimwe/linear_regression_model)
+- Kaggle Dataset: [Medical Insurance Cost Prediction](https://www.kaggle.com/datasets/rahulvyasm/medical-insurance-cost-prediction)
+- API Documentation: [Swagger UI](https://linear-regression-model-2ez7.onrender.com/docs)
+- Colab Notebook: [multivariate.ipynb](https://colab.research.google.com/github/reponseashimwe/linear_regression_model/blob/main/summative/linear_regression/multivariate.ipynb)
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
