@@ -1,19 +1,44 @@
-# Insurance Cost Prediction API with User-Friendly Interface
+# Insurance Cost Prediction API
 
-This API provides an endpoint to predict medical insurance costs based on personal factors such as age, BMI, smoking status, etc., and offers personalized recommendations for cost reduction.
+This API provides predictions for medical insurance costs based on personal factors like age, BMI, and smoking status. It also offers personalized recommendations for cost reduction.
+
+## Part of a Larger Project
+
+This API serves as the backend for:
+
+1. A data science project analyzing factors affecting insurance costs
+2. A Flutter mobile application providing a user-friendly interface
+
+For the complete project, visit the [main repository](https://github.com/reponseashimwe/linear_regression_model).
 
 ## Features
 
 - FastAPI-based RESTful API
-- **User-friendly HTML form interface** - No JSON required!
 - Input data validation with Pydantic
 - CORS middleware enabled for cross-origin requests
 - Cost reduction recommendations based on lifestyle changes
-- Powered by a trained Random Forest regression model
+- Powered by a trained regression model
 
-## Installation
+## Public API Endpoint
 
-1. Clone the repository
+The API is deployed at: [https://linear-regression-model-2ez7.onrender.com/](https://linear-regression-model-2ez7.onrender.com/)
+
+- Interactive API documentation: [https://linear-regression-model-2ez7.onrender.com/docs](https://linear-regression-model-2ez7.onrender.com/docs)
+
+## Local Installation
+
+1. Create and activate a virtual environment:
+
+```bash
+# For Windows
+python -m venv venv
+venv\Scripts\activate
+
+# For macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
 2. Install the required dependencies:
 
 ```bash
@@ -22,7 +47,7 @@ pip install -r requirements.txt
 
 3. Ensure the `best_model.pkl` file is in the same directory as the API script or at `../summative/linear_regression/best_model.pkl`
 
-## Running the API
+## Running the API Locally
 
 ```bash
 uvicorn predict:app --host 0.0.0.0 --port 8000 --reload
@@ -30,49 +55,25 @@ uvicorn predict:app --host 0.0.0.0 --port 8000 --reload
 
 Once running, you can access:
 
-- **User-friendly HTML Form**: http://localhost:8000/
 - API Documentation: http://localhost:8000/docs
-- API Endpoint for programmatic access: http://localhost:8000/api/predict
-
-## Using the HTML Form Interface
-
-The main interface at `http://localhost:8000/` provides a clean, user-friendly HTML form with:
-
-1. Proper input validation
-
-   - Age must be between 18-100
-   - BMI must be between 15-50
-   - Children must be between 0-10
-
-2. Dropdown menus for all categorical fields
-
-   - Sex (male/female)
-   - Smoking status (yes/no)
-   - Region (northeast/northwest/southeast/southwest)
-
-3. Instant results display with:
-   - Predicted insurance cost
-   - Cost reduction recommendations with savings calculated in dollars and percentages
-
-Simply fill out the form, click "Predict Insurance Cost", and view your results instantly without dealing with any JSON!
 
 ## API Endpoints
 
-### HTML Form Interface
+### Health Check
 
 ```
 GET /
 ```
 
-Returns a user-friendly HTML form for insurance cost prediction.
+Returns a welcome message and links to documentation.
 
-### Form Submission
+### Predict Insurance Cost
 
 ```
-POST /predict_form
+GET /predict
 ```
 
-Accepts form data with the following fields:
+Accepts query parameters with the following fields:
 
 | Field    | Type    | Description                  | Constraints                                           |
 | -------- | ------- | ---------------------------- | ----------------------------------------------------- |
@@ -83,15 +84,9 @@ Accepts form data with the following fields:
 | smoker   | string  | Smoking status               | "yes" or "no"                                         |
 | region   | string  | Residential region in the US | "northeast", "northwest", "southeast", or "southwest" |
 
-### API Endpoint (for programmatic access)
+### Response Format
 
-```
-POST /api/predict
-```
-
-Accepts JSON input with the same fields as the form endpoint.
-
-Both endpoints return a JSON response:
+The API returns a JSON response:
 
 ```json
 {
@@ -101,53 +96,68 @@ Both endpoints return a JSON response:
       "scenario": "Quitting smoking",
       "reduced_cost": 5678.9,
       "savings": 6666.77,
-      "savings_percentage": 54.0
+      "savings_percentage": 54.0,
+      "context": {
+        "average_smoker_cost": 14956.0,
+        "average_non_smoker_cost": 2100.0,
+        "note": "Based on industry data, smokers typically pay 3-7 times more for health insurance than non-smokers with similar demographic profiles.",
+        "health_impact": "Beyond insurance savings, quitting smoking reduces risk of heart disease by 50% after one year and lung cancer risk by 50% after 10 years."
+      }
     },
     {
       "scenario": "Reducing BMI by 5% (from 27.5 to 26.1)",
       "reduced_cost": 11234.56,
       "savings": 1111.11,
-      "savings_percentage": 9.0
+      "savings_percentage": 9.0,
+      "context": {
+        "average_current_bmi_cost": 12345.67,
+        "average_healthy_bmi_cost": 9876.54,
+        "note": "A BMI between 18.5 and 24.9 is considered healthy. Even small reductions can improve health outcomes and reduce insurance costs.",
+        "health_impact": "A 5-10% reduction in weight can significantly reduce risks of diabetes, heart disease, and joint problems."
+      }
     }
   ]
 }
 ```
 
-The recommendations section provides personalized advice on how to reduce insurance costs, including:
+## Example API Requests
 
-- The impact of quitting smoking
-- The effect of reducing BMI (for those with BMI > 25)
-- The combined effect of multiple lifestyle changes
-
-## Example API Request
-
-For programmatic access, you can use:
+Using cURL:
 
 ```bash
-curl -X 'POST' \
-  'http://localhost:8000/api/predict' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "age": 35,
-  "sex": "male",
-  "bmi": 27.5,
-  "children": 1,
-  "smoker": "yes",
-  "region": "northeast"
-}'
+curl -X 'GET' \
+  'https://linear-regression-model-2ez7.onrender.com/predict?age=30&sex=male&bmi=28.5&children=2&smoker=yes&region=northeast' \
+  -H 'accept: application/json'
 ```
 
-## Deployment
+Using Python requests:
 
-This API can be deployed to various cloud platforms like Render, Heroku, or AWS. For detailed deployment instructions, refer to the documentation of your preferred platform.
+```python
+import requests
 
-For deployment on Render:
+params = {
+    "age": 30,
+    "sex": "male",
+    "bmi": 28.5,
+    "children": 2,
+    "smoker": "yes",
+    "region": "northeast"
+}
 
-1. Create a new Web Service
-2. Link your GitHub repository
-3. Set the build command: `pip install -r requirements.txt`
-4. Set the start command: `uvicorn predict:app --host 0.0.0.0 --port $PORT`
-5. Add the environment variable: `PYTHON_VERSION=3.9.0`
+response = requests.get(
+    "https://linear-regression-model-2ez7.onrender.com/predict",
+    params=params
+)
 
-Once deployed, you can access the user-friendly form at: `https://your-app-name.onrender.com/`
+print(response.json())
+```
+
+## Integration with Mobile App
+
+This API serves as the backend for a Flutter mobile application that provides a user-friendly interface for insurance cost prediction. The mobile app communicates with this API to:
+
+1. Send user input data
+2. Receive and display predictions
+3. Show personalized recommendations
+
+For details on the mobile app, see the main project README.
