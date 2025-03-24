@@ -28,12 +28,11 @@ Features include:
 .
 ├── api/                  # FastAPI backend
 │   └── predict.py        # API endpoint definitions
+│   └── requirements.txt  # Requirements
 ├── flutterapp/           # Flutter mobile application
 ├── summative/            # Model training and analysis
 │   └── linear_regression/
-│       ├── multivariate.py        # Model training script
 │       └── multivariate.ipynb     # Jupyter notebook version
-├── requirements.txt      # Python dependencies
 └── README.md
 ```
 
@@ -71,7 +70,7 @@ source venv/bin/activate
 3. Install required dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install -r api/requirements.txt
 ```
 
 ### Flutter App
@@ -95,10 +94,10 @@ flutter run
 
 ### Training Models
 
-To train all models and compare their performance:
+To train all models and compare their performance: Use Nottebbok
 
 ```bash
-python summative/linear_regression/multivariate.py
+summative/linear_regression/multivariate.ipynb
 ```
 
 You can also explore the Colab notebook: [multivariate.ipynb](https://colab.research.google.com/github/reponseashimwe/linear_regression_model/blob/main/summative/linear_regression/multivariate.ipynb)
@@ -139,7 +138,7 @@ The Flutter application provides a user-friendly interface to:
 
 ## Demo
 
-Watch a video demonstration of the project: [YouTube Demo](https://youtu.be/your-video-id)
+Watch a video demonstration of the project: [YouTube Demo](https://youtu.be/Su7PbJeLg4Q)
 
 ## Resources
 
